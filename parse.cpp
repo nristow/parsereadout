@@ -3,20 +3,13 @@
 #include <sstream>
 #include <vector>
 
-int main()
-{
-
-	return 0;
-}
-
-std::vector<std::string> getNextLineAndSplitIntoTokens(std::istream& str)
+std::vector<std::string> getNextLineAndSplitIntoTokens(std::istringstream& str)
 {
     std::vector<std::string>   result;
     std::string                line;
     std::getline(str,line);
 
     std::stringstream          lineStream(line);
-    //lineStream << line;
     std::string                cell;
 
     while(std::getline(lineStream,cell, ','))
@@ -31,3 +24,56 @@ std::vector<std::string> getNextLineAndSplitIntoTokens(std::istream& str)
     }
     return result;
 }
+
+std::vector<int> splitTokensIntoChannels(std::vector<std::string> str)
+{
+    std::vector<int> channels;
+    std::vector<int> temp;
+    std::string token = "-";
+    bool hasToken = false;
+
+  for(int i = 0; i<str.size(); i++)
+  {
+      int tokenPosition = 0;
+      for(int j = 0; j<str[i].length(); j++)
+      {
+        if(str[i].at(j).compare(token))
+        {
+          hasToken = true;
+          tokenPosition = j;
+        }
+      }
+
+      if(hasToken == true)
+      {
+        int first = 0, second = 0;
+        std::string temp;
+        first = std::stoi(str[i]);
+        
+        for(int j = tokenPosition; j < str[i].length();j++)
+          temp += str[i].at(j);
+        second = std::stoi(temp);
+        for(int i = first; i < second; i++)
+          channels.push_back(i);
+      }
+      else
+        channels.push_back(std:stoi(str[i]));
+      hasToken = false;
+  }
+}
+
+int main()
+{	
+	//std::string str = "1-4,5,6,16";
+	std::istringstream isr("1-4,5,6,16");
+	std::vector<std::string> ret = getNextLineAndSplitIntoTokens(isr);
+	// copy by value
+	for (auto i = ret.begin(); i != ret.end(); ++i)
+		std::cout << *i << "\n";
+	std::cout << "\n";
+	//reference
+	for (auto& i:ret)
+		std::cout << i << "\n";
+	return 0;
+}
+
