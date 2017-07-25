@@ -37,7 +37,7 @@ std::vector<int> splitTokensIntoChannels(std::vector<std::string> str)
       int tokenPosition = 0;
       for(int j = 0; j<str[i].length(); j++)
       {
-        if(str[i].at(j).compare(token))
+        if(str[i].compare(j,1,token) == 0)
         {
           hasToken = true;
           tokenPosition = j;
@@ -50,22 +50,24 @@ std::vector<int> splitTokensIntoChannels(std::vector<std::string> str)
         std::string temp;
         first = std::stoi(str[i]);
         
-        for(int j = tokenPosition; j < str[i].length();j++)
+        for(int j = tokenPosition+1; j < str[i].length();j++)
           temp += str[i].at(j);
         second = std::stoi(temp);
-        for(int i = first; i < second; i++)
+        for(int i = first-1; i <= second-1; i++)
           channels.push_back(i);
       }
       else
-        channels.push_back(std:stoi(str[i]));
+        channels.push_back(std::stoi(str[i])-1);
       hasToken = false;
   }
+
+	return channels;
 }
 
 int main()
 {	
 	//std::string str = "1-4,5,6,16";
-	std::istringstream isr("1-4,5,6,16");
+	std::istringstream isr("1-4,7-9,12,16");
 	std::vector<std::string> ret = getNextLineAndSplitIntoTokens(isr);
 	// copy by value
 	for (auto i = ret.begin(); i != ret.end(); ++i)
@@ -73,6 +75,9 @@ int main()
 	std::cout << "\n";
 	//reference
 	for (auto& i:ret)
+		std::cout << i << "\n";
+	std::vector<int> channels = splitTokensIntoChannels(ret);
+	for (auto&i:channels)
 		std::cout << i << "\n";
 	return 0;
 }
